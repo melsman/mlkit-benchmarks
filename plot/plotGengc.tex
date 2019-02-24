@@ -1,0 +1,123 @@
+\documentclass[tikz, border=1cm]{standalone}
+\usepackage{pgfplots}
+\usetikzlibrary{pgfplots.groupplots}
+
+\pgfplotsset{
+  select row/.style={
+    x filter/.code={\ifnum\coordindex=#1\else\def\pgfmathresult{}\fi}
+  },
+}
+
+\pgfplotscreateplotcyclelist{yay-rainbow}{
+%{black!60!red   ,fill=white!00!red   },
+%{black!60!red   ,fill=white!40!red   },
+%{black!60!red   ,fill=white!80!red   },
+%{black!60!gray  ,fill=white!00!gray  },
+%{black!60!gray  ,fill=white!40!gray  },
+%{black!60!gray  ,fill=white!80!gray  },
+%{black!60!orange,fill=white!00!orange},
+%{black!60!orange,fill=white!40!orange},
+%{black!60!orange,fill=white!80!orange},
+%{black!60!brown ,fill=white!00!brown },
+%{black!60!brown ,fill=white!40!brown },
+%{black!60!brown ,fill=white!80!brown },
+%{black!60!yellow,fill=white!00!yellow},
+%{black!60!yellow,fill=white!40!yellow},
+%{black!60!yellow,fill=white!80!yellow},
+%{black!60!green ,fill=white!00!green },
+{black!60!green ,fill=white!40!green },
+%{black!60!green ,fill=white!80!green },
+%{black!60!cyan  ,fill=white!00!cyan  },
+{black!60!cyan  ,fill=white!40!cyan  },
+%{black!60!cyan  ,fill=white!80!cyan  },
+%{black!60!violet,fill=white!00!violet},
+{black!60!violet,fill=white!40!violet}
+%{black!60!violet,fill=white!80!violet},
+%{black!60!blue  ,fill=white!00!blue  },
+%{black!60!blue  ,fill=white!40!blue  },
+%{black!60!blue  ,fill=white!80!blue  }
+}
+
+\def\twinplot#1#2{
+  \pgfplotsforeachungrouped \row in {0,...,6}{
+    \pgfplotsforeachungrouped \col in {1,...,2}{
+      \edef\justplotit{
+        \noexpand\addplot+[bar shift=(\col-1.5)*\pgfplotbarwidth]
+          table [x=metric, select row=\row, y=#1\col] {#2};}
+      \justplotit
+    }
+  }
+}
+
+\def\triplot#1#2{
+  \pgfplotsforeachungrouped \row in {0,...,18}{
+    \pgfplotsforeachungrouped \col in {2,...,4}{
+      \edef\justplotit{
+        \noexpand\addplot+[bar shift=(\col-3.0)*\pgfplotbarwidth]
+          table [x=metric, select row=\row, y=#1\col] {#2};}
+      \justplotit
+    }
+  }
+}
+
+
+\begin{document}
+\begin{tikzpicture}
+\begin{groupplot}
+  [
+    group style={group size= 3 by 1,xticklabels at=edge bottom},
+    height=6cm,
+    width=22cm,
+    ybar=4pt,
+    ymin=0,
+    tick label style={font=\scriptsize},
+    x tick label style={rotate=45,anchor=east},
+    symbolic x coords={kbc,simple,mandelbrot,life,msort,msort-rf,mpuz,barnes-hut,logic,DLX,professor,lexgen,tsp,vliw,mlyacc,zebra,ratio,fib37,tak},
+    ylabel style={align=center},
+    cycle list name=yay-rainbow,
+    nodes near coords,
+    nodes near coords style={align=right,rotate=90,anchor=east,at={(0,0pt)},font=\scriptsize},
+    point meta=y,
+    max space between ticks=30,
+    enlarge x limits=0.04,
+  ]
+
+  \pgfkeys{/pgf/bar width=8pt}
+
+  \nextgroupplot [legend to name={CommonLegend},legend style={legend columns=4}] \triplot{a}{DataGengc.csv}
+
+  \addlegendentry{GC+RI \rule{5mm}{0pt}}
+  \addlegendentry{GENGC+RI \rule{5mm}{0pt}}
+  \addlegendentry{GENGC}
+
+  %\addplot[red,sharp plot,update limits=true] coordinates {(kbc,1) (ratio,1)};
+  %\addplot[mark=none, red, samples=2] {1};
+
+\coordinate (A) at (axis cs:kbc,1.0);
+\coordinate (O1) at (rel axis cs:0,0);
+\coordinate (O2) at (rel axis cs:1,0);
+\draw [red,sharp plot,dashed] (A -| O1) -- (A -| O2);
+
+%  \addlegendentry{GC}
+
+%  \nextgroupplot [title=b,            ] \twinplot{b}{colourData2.csv}
+%  \nextgroupplot [title=c,            ] \twinplot{c}{colourData2.csv}
+
+%  \coordinate (mtop) at (rel axis cs:0,1);
+
+%  \nextgroupplot [         ylabel=set1] \twinplot{a}{colourData2.csv}
+%  \nextgroupplot [                    ] \twinplot{b}{colourData2.csv}
+%  \nextgroupplot [                    ] \twinplot{c}{colourData2.csv}
+
+%  \coordinate (mbot) at (rel axis cs:1,0);
+\end{groupplot}
+
+  \node[at={(15.5,4)}]{\ref{CommonLegend}};
+
+%\path (mtop-|current bounding box.west) --
+%  node [anchor=south, rotate=90, yshift=-0.9cm] {\small Common}
+%  (mbot-|current bounding box.west);
+
+\end{tikzpicture}
+
+\end{document}

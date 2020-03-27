@@ -7,7 +7,7 @@ MLKIT_ROOT?=`pwd`/../mlkit
 MLKIT=$(MLKIT_ROOT)/bin/mlkit
 KITBENCH=$(MLKIT_ROOT)/bin/kitbench
 
-BENCHFILES=kbc.sml simple.sml mandelbrot.sml life.sml msort.sml msort-rf.sml mpuz.sml barnes-hut.mlb \
+BENCHFILES=ray.mlb kbc.sml simple.sml mandelbrot.sml life.sml msort.sml msort-rf.sml mpuz.sml barnes-hut.mlb \
            logic.mlb DLX.sml professor.sml lexgen.sml tsp.sml vliw.sml mlyacc.mlb zebra.sml ratio.sml \
            fib37.sml tak.sml
 
